@@ -3,9 +3,15 @@ import wmi
 import time
 import json
 import requests
+import logging
 
 from typing import List
 from typing import Dict
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s-[%(levelname)s]:%(message)s"
+)
 
 def pymi_to_dict(pymi_obj: wmi._Instance) -> Dict[str, str]:
     """
@@ -62,21 +68,33 @@ def query(conn: wmi._Connection, cls: str, attributes: List[str] = []) -> List[D
         data.append(d)
     return data
 
+logging.info("Initializing the Application..")
+
+conn = wmi.WMI()
+
+logging.info("Succesfully started the application.")
+
 while True:
+
+    logging.info("Gathering wmi data..")
+
     time_stamp = int(time.time())
-
-    conn = wmi.WMI()
-
     disk_usage = query(conn, "Win32_LogicalDisk", ["Name", "Size", "FreeSpace"])
     free_memory = query(conn, "Win32_PerfFormattedData_PerfOS_Memory", ["AvailableMBytes"])
     load_percentage = query(conn, "Win32_Processor", ["LoadPercentage"])
     computer_name = os.environ['COMPUTERNAME']
     
+    logging.info("Successfully gathered WMI data.")
+
+    logging.info("Preparing to send data to the server.")
+
     output_dict = {"timestamp": str(time_stamp), "LeafNames": [computer_name], "RAM": [free_memory], "Disk": [disk_usage], "CurrentLoadPercentage": [load_percentage]}
 
-    print(output_dict)
+    # print(output_dict)
 
     r = requests.post('http://207.154.247.72:5000/leaf', json=output_dict)
+
+    logging.info("Succesfully sent the data.")
 
     time.sleep(1)
 
