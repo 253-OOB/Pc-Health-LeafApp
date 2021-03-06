@@ -14,6 +14,10 @@ def pymi_to_dict(pymi_obj: wmi._Instance) -> Dict[str, str]:
     Arguments:
         pymi_obj (wmi._Instance): The PyMI instance object that contains the attributes.
 
+    e.g.
+    
+    {'Name': 'C:', 'Size': '1234567', 'FreeSpace': '123456'}
+
     Returns:
         attributes (Dict[str, str]): The dict of attributes and values that make up the PyMI object.
     """
