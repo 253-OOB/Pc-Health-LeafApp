@@ -12,10 +12,14 @@ def pymi_to_dict(pymi_obj: wmi._Instance) -> Dict[str, str]:
     Convert a PyMI object to a dict of attributes.
 
     Arguments:
-        pymi_obj (wmi._Instance): The PyMI instance object that contains the attributes.
+    ----------
+        pymi_obj: wmi._Instance
+            The PyMI instance object that contains the attributes.
 
     Returns:
-        attributes (Dict[str, str]): The dict of attributes and values that make up the PyMI object.
+    --------
+        JSON Object
+            The dict of attributes and values that make up the PyMI object.
     """
     attributes = {}
     instance = pymi_obj._instance
@@ -33,13 +37,23 @@ def query(conn: wmi._Connection, cls: str, attributes: List[str] = []) -> List[D
     Select the attributes specified in the `attributes` list. If empty, select all.
     
     Arguments:
-        conn (wmi._Connection): The WMI object.
-        cls (str): The class to query.
-        attributes (List[str]): The list of attributes to select from the query. If empty select all.
+    ----------
+        conn: wmi._Connection
+            WMI connection object.
+
+        cls: str 
+            The class to query.
+
+        attributes: List[str] 
+            The list of attributes to select from the query. If empty select all.
 
     Returns:
-        data (List[Dict[str, str]]): The query result as a list of rows, each a dict of attributes.
+    --------
+        JSON Object
+            Contains the result of a query in the form of a list of dictionaries.
+            Can be interpreted to be in the form of a JSON Object.
     """
+    
     data = []
     for q in conn.query("select * from {}".format(cls)):
         d = pymi_to_dict(q)
