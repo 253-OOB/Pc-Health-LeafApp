@@ -31,6 +31,13 @@ def query(conn: wmi._Connection, cls: str, attributes: List[str] = []) -> List[D
     Query a WMI class and return all or specified attributes.
 
     Select the attributes specified in the `attributes` list. If empty, select all.
+
+    e.g.
+
+    [
+        {'Name': 'C:', 'Size': '1234567', 'FreeSpace': '123456'}, 
+        {'Name': 'D:', 'Size': '1234567', 'FreeSpace': '123456'}
+    ]
     
     Arguments:
         conn (wmi._Connection): The WMI object.
