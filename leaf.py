@@ -52,7 +52,7 @@ def query(conn: wmi._Connection, cls: str, attributes: List[str] = []) -> List[D
         data (List[Dict[str, str]]): The query result as a list of rows, each a dict of attributes.
     """
     data = []
-    for q in conn.query("select * from {}".format(cls)):
+    for q in conn.query("select * from " + cls):
         d = pymi_to_dict(q)
         if attributes:
             d = {attr: d[attr] for attr in attributes} # Select attributes
