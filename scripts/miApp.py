@@ -4,6 +4,9 @@ import time
 import json
 import xmltodict
 
+# TODO: Write documentation
+# TODO: If a Logical Disk does not have storage space (ex: USB Hub), no values will be shown, and the code will crash.
+
 class miApp(mi.Application):
     
     def __init__(self):
