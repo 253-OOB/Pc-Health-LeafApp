@@ -54,11 +54,9 @@ class miApp(mi.Application):
 
             result.append( attribute_extractor )
 
-        json_string = json.dumps(result)
-
         query.close()
 
-        return json_string
+        return result
 
     def close(self) -> None:
         self.session.close()

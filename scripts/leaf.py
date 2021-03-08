@@ -23,7 +23,7 @@ while True:
     logging.info("Gathering wmi data..")
 
     json_data = {
-        "TIMESTAMP": int(time.time()),
+        "TIMESTAMP": time.time(),
         "LEAFNAME": os.environ[u"COMPUTERNAME"],
         "PROCESSORLOAD": app.executeQuery(u"Win32_Processor", [u"LoadPercentage"]),
         "RAMUSAGE": app.executeQuery(u"Win32_PerfFormattedData_PerfOS_Memory", [u"AvailableMBytes"]),
@@ -32,11 +32,12 @@ while True:
     
     logging.info("Successfully gathered WMI data.")
 
-    r = requests.post('http://207.154.247.72:5000/leaf', json=json.dumps(json_data))
+    r = requests.post('https://41b93760208f.ngrok.io/api/PostToTable', json=json.dumps(json_data))
+    # r = requests.post('http://localhost:7071/api/PostToTable', json=json.dumps(json_data))
 
     logging.info("Succesfully sent the data.")
 
-    time.sleep(1)
+    time.sleep(10)
 
 app.close()
 
