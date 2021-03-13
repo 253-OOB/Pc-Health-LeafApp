@@ -29,12 +29,12 @@ class miApp(mi.Application):
         )
 
         result = []
-
+        
         while obj := query.get_next_instance():
 
             result_dict = xmltodict.parse(self.serializer.serialize_instance(obj))
 
-            attribute_extractor = {}
+            attribute_extractor = []
 
             # It is possible to have a Logical Disk with no FreeSpace. It will appear with no value. This will crash the program.
 
@@ -44,16 +44,16 @@ class miApp(mi.Application):
             for i in range( len(result_dict) ):
                 for prop in result_dict[i]["INSTANCE"]["PROPERTY"]:
                     if prop["@NAME"] in wmiProperties:
-                        attribute_extractor = {
+                        attribute_extractor.append({
                             "NAME": prop["@NAME"],
                             "TYPE": prop["@TYPE"],
                             "VALUE": prop["VALUE"]
-                        }
+                        })
 
             result.append( attribute_extractor )
 
         query.close()
-
+        
         return result
 
     def close(self) -> None:
