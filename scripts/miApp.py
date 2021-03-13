@@ -21,13 +21,11 @@ class miApp(mi.Application):
 
     def executeQuery( self, wmiClass:str, wmiProperties:list ) -> str:
 
-        attributes_string = ""
-        for i in range( len(wmiProperties) ):
-            attributes_string += wmiProperties[i] + ","
+        attributes_string = ",".join(wmiProperties)
 
         query = self.session.exec_query(
             u"root\\cimv2",
-            u"SELECT {} FROM {}".format(attributes_string[:-1], wmiClass)
+            u"SELECT {} FROM {}".format(attributes_string, wmiClass)
         )
 
         result = []
