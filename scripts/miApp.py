@@ -44,11 +44,12 @@ class miApp(mi.Application):
             for i in range( len(result_dict) ):
                 for prop in result_dict[i]["INSTANCE"]["PROPERTY"]:
                     if prop["@NAME"] in wmiProperties:
-                        attribute_extractor.append({
-                            "NAME": prop["@NAME"],
-                            "TYPE": prop["@TYPE"],
-                            "VALUE": prop["VALUE"]
-                        })
+                        if "VALUE" in prop.keys():
+                            attribute_extractor.append({
+                                "NAME": prop["@NAME"],
+                                "TYPE": prop["@TYPE"],
+                                "VALUE": prop["VALUE"]
+                            })
 
             result.append( attribute_extractor )
 
