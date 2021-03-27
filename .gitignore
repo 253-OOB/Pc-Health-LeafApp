@@ -1,4 +1,9 @@
 # Byte-compiled / optimized / DLL files
+
+leaf.json
+
+logs/
+
 __pycache__/
 *.py[cod]
 *$py.class
