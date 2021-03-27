@@ -4,5 +4,8 @@ scripts
 .. toctree::
    :maxdepth: 4
 
-   main
-   pchealth
+   datagatherer
+   leafconf
+   logger
+   networking
+   readings
