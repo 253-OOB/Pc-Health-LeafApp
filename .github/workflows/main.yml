@@ -7,8 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,7 +26,7 @@ jobs:
 #       with:
 #         docs-folder: "docs/"
 #         build-command: "make html"
-#         pre-build-command: "sphinx-apidocs -e -o ./docs/rstfiles ./scripts"
+#         pre-build-command: ""
 
   docs:
     runs-on: windows-latest
@@ -38,8 +36,9 @@ jobs:
 
       - name: Python Dependency Installation
         uses: py-actions/py-dependency-install@v2.1.0
-      
 
-#       # Runs a single command using the runners shell
-#       - name: Install requirements
-#         run: pip install 
+      - name: Generate sphinx api docs
+        run: sphinx-apidocs -e -o ./docs/rstfiles ./scripts 
+        
+      - name: Generate html
+        run: cd docs && make html
