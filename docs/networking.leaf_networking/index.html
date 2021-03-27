@@ -150,8 +150,78 @@
         <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="networking-leaf-networking-module">
-<h1>networking.leaf_networking module<a class="headerlink" href="#networking-leaf-networking-module" title="Permalink to this headline">¶</a></h1>
+        <div class="section" id="module-networking.leaf_networking">
+<span id="networking-leaf-networking-module"></span><h1>networking.leaf_networking module<a class="headerlink" href="#module-networking.leaf_networking" title="Permalink to this headline">¶</a></h1>
+<dl class="py exception">
+<dt id="networking.leaf_networking.InitialisationTokenException">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">InitialisationTokenException</span></code><a class="headerlink" href="#networking.leaf_networking.InitialisationTokenException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Raised when the server returns a 403 error after being sent an initialisation token.
+An error notification should be sent to the admin to notify him of the configuration error.</p>
+</dd></dl>
+<dl class="py exception">
+<dt id="networking.leaf_networking.RefreshTokenException">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-name descname"><span class="pre">RefreshTokenException</span></code><a class="headerlink" href="#networking.leaf_networking.RefreshTokenException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Raised when the server returns a 403 error after being sent a refresh token.
+An error notification should be sent to the admin to notify him of the configuration error</p>
+</dd></dl>
+<dl class="py class">
+<dt id="networking.leaf_networking.LeafNetworking">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">LeafNetworking</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refreshToken</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#networking.leaf_networking.LeafNetworking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a new LeadfNetworking instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The url to which data should be sent.</p></li>
+<li><p><strong>refreshToken</strong> (<em>str</em>) – The particular refresh token associated with this leaf.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#networking.leaf_networking.RefreshTokenException" title="networking.leaf_networking.RefreshTokenException"><strong>RefreshTokenException</strong></a> – Occurs when the token is deemed to be invalid.</p></li>
+<li><p><strong>ConnectionError</strong> – Occurs when the leaf cannot connect to the server.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="networking.leaf_networking.LeafNetworking.openChannelNotification">
+<code class="sig-name descname"><span class="pre">openChannelNotification</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#networking.leaf_networking.LeafNetworking.openChannelNotification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an open channel notification.</p>
+<p>Only use this method when you cannot authorize this leaf through the regular channels.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="networking.leaf_networking.LeafNetworking.send_to_root">
+<code class="sig-name descname"><span class="pre">send_to_root</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#networking.leaf_networking.LeafNetworking.send_to_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends data to the server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – Data to send to the server</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#networking.leaf_networking.RefreshTokenException" title="networking.leaf_networking.RefreshTokenException"><strong>RefreshTokenException</strong></a> – Occurs when the token is deemed to be invalid.</p></li>
+<li><p><strong>ConnectionError</strong> – Occurs when the leaf cannot connect to the server.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt id="networking.leaf_networking.initialiseLeaf">
+<code class="sig-name descname"><span class="pre">initialiseLeaf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialisationToken</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#networking.leaf_networking.initialiseLeaf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to initialise a new leaf.</p>
+<p>After a successful initialisation, a new configuration file will be installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The url to connect to.</p></li>
+<li><p><strong>initialisationToken</strong> (<em>str</em>) – The initialisation token (In the leaf.json file).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 </div>
 
       </article>
