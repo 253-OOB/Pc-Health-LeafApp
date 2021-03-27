@@ -1,32 +1,16 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build Docs
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+
   push:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  
-  
-
-  
-#   docs:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v1
-#     - uses: ammaraskar/sphinx-action@master
-#       with:
-#         docs-folder: "docs/"
-#         build-command: "make html"
-#         pre-build-command: ""
 
   docs:
     runs-on: windows-latest
@@ -38,7 +22,7 @@ jobs:
         uses: py-actions/py-dependency-install@v2.1.0
 
       - name: Generate sphinx api docs
-        run: sphinx-apidocs -e -o ./docs/rstfiles ./scripts 
+        run: sphinx-apidoc -e -o ./docs/rstfiles ./scripts 
         
       - name: Generate html
         run: cd docs && make html
