@@ -16,24 +16,26 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  
+  
+
+  
+  docs:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
+        build-command: "make html"
+        pre-build-command: "sphinx-apidocs -e -o ./docs/rstfiles ./scripts"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
 
-      - name: Sphinx Build
-      - uses: ammaraskar/sphinx-action@0.4
-        with:
-          # The folder containing your sphinx docs.
-          docs-folder: docs
-          # The command used to build your documentation.
-          build-command: make html
-          pre-build-command: sphinx-apidocs -e -o ./docs/rstfiles ./scripts
-
+      
 
 #       # Runs a single command using the runners shell
 #       - name: Run a one-line script
