@@ -1,0 +1,32 @@
+{
+
+    "init": {
+        "special_auth_token": "THE SPECIAL TOKEN TO REGISTER A LEAF"
+    },
+
+    "configuration": {
+        
+        "leaf_refresh_token": "THE REFRESH TOKEN ASSIGNED BY THE SERVER AT LEAF INITIALISATION",
+        
+        "rules": {
+
+            "queries": {
+
+                "CPU": true,
+                "RAM": true,
+                "DISK": true,
+                "PROCESSES": true,
+                "VIDEOCONTROLLER": true
+
+            },
+
+            "notifications": [
+                "RULES SET TO HANDLE NOTFICATIONS"
+            ],
+
+            "sqlite": "true or false"
+
+        }
+    }
+
+}
