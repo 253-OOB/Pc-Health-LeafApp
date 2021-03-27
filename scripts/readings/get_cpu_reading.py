@@ -1,6 +1,10 @@
 
 import json
 
+if __name__.startswith("scripts"):
+    import sys
+    sys.path.append("./scripts")
+
 from datagatherer.miwrapper import MIApp
 
 def get_cpu_reading( app: MIApp ) -> dict:

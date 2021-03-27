@@ -2,6 +2,10 @@
 import json
 import zlib
 
+if __name__.startswith("scripts"):
+    import sys
+    sys.path.append("./scripts")
+
 from datagatherer.miwrapper import MIApp
 
 def get_process_and_thread_readings( app: MIApp ) -> dict:

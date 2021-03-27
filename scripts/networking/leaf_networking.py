@@ -1,6 +1,10 @@
 
 import requests
 
+if __name__.startswith("scripts"):
+    import sys
+    sys.path.append("./scripts")
+
 from leafconf.leaf_config import override_config
 
 class RefreshTokenException(Exception):
