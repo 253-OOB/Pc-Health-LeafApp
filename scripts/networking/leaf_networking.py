@@ -1,11 +1,15 @@
-
+import os
 import requests
+import time
 
 if __name__.startswith("scripts"):
     import sys
     sys.path.append("./scripts")
 
+from logger.leaf_logger import appLogger
 from leafconf.leaf_config import override_config
+
+log = appLogger("../../logs/leaf.log")
 
 class RefreshTokenException(Exception):
     """
@@ -65,7 +69,7 @@ class LeafNetworking(object):
             raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")
         
 
-    def send_to_root( self, data: str ):
+    def send_to_root( self, data: dict ):
         """Sends data to the server
 
         :param data: Data to send to the server
@@ -78,6 +82,7 @@ class LeafNetworking(object):
 
             "AccessToken": self.__accessToken,
             "RefreshToken": self.__refreshToken,
+            "Timestamp": time.time(),
             "Data": data
 
         }
@@ -93,14 +98,15 @@ class LeafNetworking(object):
 
         elif res.status_code == 403:
 
+            log.critical( "The refresh token token is wrong." )
             raise RefreshTokenException("There was a problem with the refresh token.")
 
         else:
 
             raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
 
-
-    def openChannelNotification( self ):
+    @staticmethod
+    def openChannelNotification( ):
         """
         Send an open channel notification.
 
@@ -109,30 +115,48 @@ class LeafNetworking(object):
         # TODO 
 
         pass
-
-def initialiseLeaf(self, url, initialisationToken):
-    """
-    Function to initialise a new leaf.
     
-    After a successful initialisation, a new configuration file will be installed.
-
-    :param url: The url to connect to.
-    :type url: str
-    :param initialisationToken: The initialisation token (In the leaf.json file).
-    :type initialisationToken: str
-    """
+    @staticmethod
+    def initialiseLeaf( url, initialisationToken):
+        """
+        Function to initialise a new leaf.
         
-    payload = {
-        "InitialisationToken": initialisationToken
-    }
+        After a successful initialisation, a new configuration file will be installed.
 
-    res = requests.post(url, data=payload)
+        :param url: The url to connect to.
+        :type url: str
+        :param initialisationToken: The initialisation token (In the leaf.json file).
+        :type initialisationToken: str
+        """
 
-    if res.status_code == 200:
-        override_config( res.json()["config"] )
+        payload = {
+            "InitialisationToken": initialisationToken,
+            "ComputerName": os.name
+        }
 
-    elif res.status_code == 403:
-        raise InitialisationTokenException("There was a problem with the initialisation token.")
-    
-    else:
-        raise ConnectionError("Connection error. Please try again.")
+        log.info("Sending initialisation data.")
+
+        res = requests.post(url, data=payload)
+
+        if res.status_code == 200:
+
+            log.info( "Successfully initialised the leaf on the server." )
+
+            data = res.json()
+
+            conf = data["Configuration"]
+            conf["configuration"]["leaf_refresh_token"] = data["RefreshToken"]
+
+            override_config( conf )
+
+            log.info("Successfully installed the new configuration.")
+
+        elif res.status_code == 403:
+
+            log.critical( "The leaf cannot be intialised." )
+            log.critical( "The initialisation token is either wrong or expired" )
+
+            raise InitialisationTokenException("There was a problem with the initialisation token.")
+        
+        else:
+            raise ConnectionError("Connection error. Please try again.")

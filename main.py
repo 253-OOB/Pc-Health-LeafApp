@@ -1,18 +1,89 @@
 
-URL = "The url to call back to"
+import os.path
+import time
+
+from scripts.logger.leaf_logger import appLogger
+
+from scripts.leafconf.leaf_config import read_config
+
+from scripts.networking.leaf_networking import LeafNetworking
+from scripts.networking.leaf_networking import InitialisationTokenException
+from scripts.networking.leaf_networking import RefreshTokenException
 
 from scripts.datagatherer.miwrapper import MIApp
-from scripts.readings.get_cpu_reading import get_cpu_reading
 
+from scripts.readings.get_cpu_reading import get_cpu_reading
+from scripts.readings.get_logical_disk_reading import get_logical_disk_reading
+from scripts.readings.get_memory_reading import get_memory_reading
+from scripts.readings.get_video_controller_reading import get_video_controller_reading
+from scripts.readings.get_process_and_thread_reading import get_process_and_thread_readings
+ 
+URL = "The url to call back to"
 
 if __name__ == "__main__":
 
-    app = MIApp()
+    config = None
+    log = appLogger("logs/leaf.log")
+    if os.path.isfile("config/leaf.json"):
 
-    print(get_cpu_reading(app))
+
+
+        config = read_config()
+        app = MIApp()
+
+        while True:
+
+            if "init" in config:
+
+                log.info("\"init\" found: attempting to initialise the leaf.")
+
+                try:
+
+                    LeafNetworking.initialiseLeaf(URL, config["init"]["special_auth_token"])
+
+                except ConnectionError:
+
+                    log.error("Could not connect. Will try again in 5 min.")
+                    time.sleep(60*5)
+
+                except InitialisationTokenException:
+
+                    log.critical( "Shutting down the leaf." )
+                    exit(-1)
+
+            else:
+
+                log.info("Initialising application networking.")
+
+                try:
+
+                    network = LeafNetworking(URL, config["configuration"]["leaf_refresh_token"])
+
+                except ConnectionError:
+
+                    log.error("Could not connect. Will try again in 5 min.")
+                    time.sleep(60*5)
+                    continue
+
+                except RefreshTokenException:
+
+                    log.critical( "Shutting down the leaf." )
+                    exit(-1)
+
+                for query_function in config["configuration"]["queries"]:
+                    query_result = locals()[query_function]() # Calls the query functions by their string names
+                    network.send_to_root( query_result )
+
+                time.sleep(60)
+
+    else:
+        # TODO: Send message on the open notification channel
+        pass
 
     app.close()
 
+
+    
 
 # import os
 # import time

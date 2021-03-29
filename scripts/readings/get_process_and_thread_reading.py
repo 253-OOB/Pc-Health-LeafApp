@@ -62,6 +62,6 @@ def get_process_and_thread_readings( app: MIApp ) -> dict:
     return { 
         "processes": {
             "compressed": True,
-            "data": compressed
+            "data": str(compressed)
         }
     }
