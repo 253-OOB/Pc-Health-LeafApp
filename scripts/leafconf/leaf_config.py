@@ -8,7 +8,7 @@ def override_config( jsonData: dict ):
     :type jsonData: dict
     """
 
-    fp = open("../../config/leaf.json", "w")
+    fp = open("config/leaf.json", "w")
     fp.write( json.dumps(jsonData) )
     fp.close()
 

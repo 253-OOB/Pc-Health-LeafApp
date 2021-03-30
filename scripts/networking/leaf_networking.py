@@ -1,6 +1,7 @@
 import os
 import requests
 import time
+import json
 
 if __name__.startswith("scripts"):
     import sys
@@ -9,7 +10,7 @@ if __name__.startswith("scripts"):
 from logger.leaf_logger import appLogger
 from leafconf.leaf_config import override_config
 
-log = appLogger("../../logs/leaf.log")
+log = appLogger("logs/leaf")
 
 class RefreshTokenException(Exception):
     """
@@ -47,26 +48,26 @@ class LeafNetworking(object):
 
         self.__refreshToken = refreshToken
 
-        res = requests.post(self.__url, {
-            "RefreshToken": self.__refreshToken
-        })
+        # res = requests.post(self.__url, {
+        #     "RefreshToken": self.__refreshToken
+        # }, verify=False)
 
-        if res.status_code == 200:
+        # if res.status_code == 200:
 
-            # Connection was successful the accessToken was gathered.
-            self.__accessToken = res.json()["AccessToken"]
+        #     # Connection was successful the accessToken was gathered.
+        #     self.__accessToken = res.json()["AccessToken"]
         
-        elif res.status_code == 403:
+        # elif res.status_code == 403:
 
-            # In this case an email will be sent to the admin notifying him that there was configuration error with the leaf.
-            # TODO Log this as a critical error.
-            raise RefreshTokenException( "There was a problem with the refresh token." )
+        #     # In this case an email will be sent to the admin notifying him that there was configuration error with the leaf.
+        #     # TODO Log this as a critical error.
+        #     raise RefreshTokenException( "There was a problem with the refresh token." )
 
-        else:
+        # else:
 
-            # In this case the caller should retry after a moment
-            # TODO Log this error as an error
-            raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")
+        #     # In this case the caller should retry after a moment
+        #     # TODO Log this error as an error
+        #     raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")
         
 
     def send_to_root( self, data: dict ):
@@ -78,32 +79,34 @@ class LeafNetworking(object):
         :raises ConnectionError: Occurs when the leaf cannot connect to the server. 
         """
 
-        payload = {
+        print(data)
 
-            "AccessToken": self.__accessToken,
-            "RefreshToken": self.__refreshToken,
-            "Timestamp": time.time(),
-            "Data": data
+        # payload = {
 
-        }
+        #     "AccessToken": self.__accessToken,
+        #     "RefreshToken": self.__refreshToken,
+        #     "Timestamp": time.time(),
+        #     "Data": data
 
-        res = requests.post( self.__url, data=payload )
+        # }
 
-        if res.status_code == 200:
+        # res = requests.post( self.__url, data=payload )
 
-            resData = res.json()
+        # if res.status_code == 200:
 
-            if "AccessToken" in resData:
-                self.__accessToken = resData["AccessToken"]
+        #     resData = res.json()
 
-        elif res.status_code == 403:
+        #     if "AccessToken" in resData:
+        #         self.__accessToken = resData["AccessToken"]
 
-            log.critical( "The refresh token token is wrong." )
-            raise RefreshTokenException("There was a problem with the refresh token.")
+        # elif res.status_code == 403:
 
-        else:
+        #     log.critical( "The refresh token token is wrong." )
+        #     raise RefreshTokenException("There was a problem with the refresh token.")
 
-            raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
+        # else:
+
+        #     raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
 
     @staticmethod
     def openChannelNotification( ):
@@ -131,20 +134,21 @@ class LeafNetworking(object):
 
         payload = {
             "InitialisationToken": initialisationToken,
-            "ComputerName": os.name
+            "ComputerName": os.environ["COMPUTERNAME"]
         }
 
         log.info("Sending initialisation data.")
 
-        res = requests.post(url, data=payload)
+        res = requests.post(url + "/default.json", data=json.dumps(payload), verify=False)
 
         if res.status_code == 200:
 
             log.info( "Successfully initialised the leaf on the server." )
 
+            print(res.status_code)
             data = res.json()
 
-            conf = data["Configuration"]
+            conf = json.loads(data["Configuration"])
             conf["configuration"]["leaf_refresh_token"] = data["RefreshToken"]
 
             override_config( conf )
