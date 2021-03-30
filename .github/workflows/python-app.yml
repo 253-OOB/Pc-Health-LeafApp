@@ -31,9 +31,10 @@ jobs:
         mkdir ./dist/pcheath/logs
         mkdir ./dist/pchealth/config
         mv scripts ./dist/pchealth
+        mkdir deployment
     
     - name: Zip the build folder
-      run: compress-archive ./dist/pchealth pchealth.zip    
+      run: compress-archive ./dist/pchealth ./deployment/pchealth.zip    
     - name: Deploy to Azure Storage
       uses: ulaval/azure-blob-copy-action@v1
       with:
@@ -41,4 +42,4 @@ jobs:
          connection_string: ${{secrets.AZURESTORAGECONNECTIONSTRING}}
          container_name: pchealth
          blob_directory: leaf/leafapp
-         local_directory: ./pchealth.zip
+         local_directory: ./deployment
