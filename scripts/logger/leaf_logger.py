@@ -1,15 +1,12 @@
 
 import logging
 
-from enum import Enum
 
-class level(Enum):
-    """Enum for the different logging levels."""
-    DEBUG = logging.DEBUG
-    INFO = logging.INFO
-    WARNING = logging.WARNING
-    ERROR = logging.ERROR
-    CRITICAL = logging.CRITICAL
+DEBUG = logging.DEBUG
+INFO = logging.INFO
+WARNING = logging.WARNING
+ERROR = logging.ERROR
+CRITICAL = logging.CRITICAL
 
 class appLogger( logging.Logger ):
     """
@@ -28,7 +25,7 @@ class appLogger( logging.Logger ):
     :type logging: str
     """
 
-    def __init__(self, name, min_logger_level=level.DEBUG, format="%(asctime)s-[%(levelname)s]:%(message)s"):
+    def __init__(self, name, min_logger_level=DEBUG, format="%(asctime)s-[%(levelname)s]:%(message)s"):
         
         super().__init__(name)
         

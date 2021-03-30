@@ -18,27 +18,29 @@ from scripts.readings.get_memory_reading import get_memory_reading
 from scripts.readings.get_video_controller_reading import get_video_controller_reading
 from scripts.readings.get_process_and_thread_reading import get_process_and_thread_readings
  
-URL = "The url to call back to"
+
 
 if __name__ == "__main__":
 
-    config = None
-    log = appLogger("logs/leaf.log")
+    URL = "https://localhost:7071/api/fInitialiseLeaf"
+
+    log = appLogger("logs/leaf")
     if os.path.isfile("config/leaf.json"):
 
+        log.info("Started Application")
 
-
-        config = read_config()
         app = MIApp()
 
         while True:
+
+            config = read_config("config/leaf.json")
 
             if "init" in config:
 
                 log.info("\"init\" found: attempting to initialise the leaf.")
 
                 try:
-
+                    print(config)
                     LeafNetworking.initialiseLeaf(URL, config["init"]["special_auth_token"])
 
                 except ConnectionError:
@@ -70,17 +72,19 @@ if __name__ == "__main__":
                     log.critical( "Shutting down the leaf." )
                     exit(-1)
 
-                for query_function in config["configuration"]["queries"]:
-                    query_result = locals()[query_function]() # Calls the query functions by their string names
+                for query_function in config["configuration"]["rules"]["queries"]:
+                    query_result = locals()[query_function](app) # Calls the query functions by their string names
                     network.send_to_root( query_result )
 
                 time.sleep(60)
+
+        app.close()
 
     else:
         # TODO: Send message on the open notification channel
         pass
 
-    app.close()
+    
 
 
     
