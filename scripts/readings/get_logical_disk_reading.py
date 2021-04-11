@@ -1,5 +1,6 @@
 
 import json
+import time
 
 if __name__.startswith("scripts"):
     import sys
@@ -27,9 +28,10 @@ def get_logical_disk_reading(app: MIApp) -> dict:
                 disk["Size"] = disk["Size"] / pow(1024, 3) # Number represents 1GiB
                 logical_disks.append( disk | perf )
     
-    return { 
+    return {
+        "timestamp": time.time(), 
         "logical_disks": {
             "compressed": False,
-            "data": json.dumps(logical_disks)
+            "data": logical_disks
         }
     }

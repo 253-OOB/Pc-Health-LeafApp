@@ -1,6 +1,7 @@
 
 import json
 import zlib
+import time
 
 if __name__.startswith("scripts"):
     import sys
@@ -59,7 +60,8 @@ def get_process_and_thread_readings( app: MIApp ) -> dict:
             
     compressed = zlib.compress(json.dumps(processes_and_threads).encode("utf8"))
     
-    return { 
+    return {
+        "timestamp": time.time(), 
         "processes": {
             "compressed": True,
             "data": str(compressed)

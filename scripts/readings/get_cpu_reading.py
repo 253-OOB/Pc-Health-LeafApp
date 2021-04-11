@@ -1,5 +1,6 @@
 
 import json
+import time
 
 if __name__.startswith("scripts"):
     import sys
@@ -19,10 +20,11 @@ def get_cpu_reading( app: MIApp ) -> dict:
     """
     processors = app.executeQuery(u"Win32_Processor", [u"Name", u"NumberOfCores", u"NumberOfLogicalProcessors", u"ThreadCount", u"VirtualizationFirmwareEnabled"])
     processors[0]["Cores"] = app.executeQuery(u"Win32_PerfFormattedData_PerfOS_Processor", [u"Name", u"PercentProcessorTime"])
-    
-    return { 
+
+    return {
+        "timestamp": time.time(), 
         "processors": {
             "compressed": False,
-            "data": json.dumps(processors)
+            "data": processors
         }
     }

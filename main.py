@@ -22,8 +22,8 @@ from scripts.readings.get_process_and_thread_reading import get_process_and_thre
 
 if __name__ == "__main__":
 
-    URL = "https://localhost:7071/api/fInitialiseLeaf"
-
+    URL = "https://pchealth-leaf.azurewebsites.net/api/"
+    # URL = 'http://localhost:7071/api/'
     log = appLogger("logs/leaf")
     if os.path.isfile("config/leaf.json"):
 
@@ -40,16 +40,17 @@ if __name__ == "__main__":
                 log.info("\"init\" found: attempting to initialise the leaf.")
 
                 try:
-                    print(config)
                     LeafNetworking.initialiseLeaf(URL, config["init"]["special_auth_token"])
 
                 except ConnectionError:
 
-                    log.error("Could not connect. Will try again in 5 min.")
+                    log.error("Initialisation: Could not connect to the server. Will try again in 5 min.")
                     time.sleep(60*5)
 
                 except InitialisationTokenException:
 
+                    log.critical( "The leaf cannot be intialised." )
+                    log.critical( "The initialisation token is either wrong or expired" )
                     log.critical( "Shutting down the leaf." )
                     exit(-1)
 
@@ -63,12 +64,13 @@ if __name__ == "__main__":
 
                 except ConnectionError:
 
-                    log.error("Could not connect. Will try again in 5 min.")
+                    log.error("Connection: Could not connect to the server. Will try again in 5 min.")
                     time.sleep(60*5)
                     continue
 
                 except RefreshTokenException:
-
+                            
+                    log.critical( "The refresh token token is wrong." )
                     log.critical( "Shutting down the leaf." )
                     exit(-1)
 

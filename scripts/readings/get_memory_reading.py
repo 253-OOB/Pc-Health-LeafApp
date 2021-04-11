@@ -1,5 +1,6 @@
 
 import json
+import time
 
 if __name__.startswith("scripts"):
     import sys
@@ -28,8 +29,9 @@ def get_memory_reading(app: MIApp) -> dict:
     memory[0]["TotalMemory"] = TotalPhysicalMemory/pow(1024, 3) # Number represents 1GiB
 
     return { 
+        "timestamp": time.time(),
         "memory": {
             "compressed": False,
-            "data": json.dumps(memory)
+            "data": memory
         }
     }
