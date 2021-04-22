@@ -8,18 +8,6 @@ class NotificationTree():
 
 class Notification(object):
 
-    """
-    {
-        "LeafID": 1,
-        "OrganisationID": 3,
-        "Title": "TestTitle",
-        "TimeStamp": 1618496385,
-        "Content": "TestContent",
-        "CausingValue": "TestCausingValue",
-        "CommunicationMethod": "sms"
-    }
-    """
-
     def __init__(self, notification_conf: dict) -> list:
 
         self.conf = notification_conf
