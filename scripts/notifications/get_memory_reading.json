@@ -1,0 +1,6 @@
+{
+    "memory": {
+      "compressed": false,
+      "data": "[{\"AvailableMBytes\": 18.337890625, \"PageFaultsPersec\": 501, \"TotalMemory\": 32.0}]"
+    }
+}

@@ -1,0 +1,63 @@
+{
+
+    "init": {
+        "special_auth_token": "THE SPECIAL TOKEN TO REGISTER A LEAF"
+    },
+
+    "configuration": {
+        
+        "leaf_refresh_token": "THE REFRESH TOKEN ASSIGNED BY THE SERVER AT LEAF INITIALISATION",
+        
+        "rules": {
+
+            "queries": [
+
+                "get_cpu_reading",
+                "get_logical_disk_reading",
+                "get_memory_reading",
+                "get_process_and_thread_reading",
+                "get_video_controller_reading"
+
+            ],
+
+            "notifications": {
+
+                "PercentProcessorTime": {
+                    
+                    "Title": "Percent Processor Time Notif",
+                    "Content": "This is a trigger for percent processor time",
+                    "Comparison": {
+                        "operator": ">=",
+                        "value": 0
+                    }
+                },
+
+                "Memory": {
+                    
+                    "Title": "Memory Notif",
+                    "Content": "This is a trigger for RAM",
+                    "Comparison": {
+                        "operator": "<",
+                        "value": 9999999
+                    }
+                },
+
+                "LogicalDisk": {
+                    
+                    "Title": "Logical Disk Notif",
+                    "Content": "This is a trigger for Logical Disk",
+                    "Comparison": {
+                        "operator": ">",
+                        "value": 0
+                    }
+                }
+
+
+            },
+            
+            "sqlite": "true or false"
+
+        }
+    }
+
+}
