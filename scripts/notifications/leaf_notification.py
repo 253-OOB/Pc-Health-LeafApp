@@ -50,8 +50,8 @@ class Notification(object):
                 break
         operator = self.conf["notifications"]["PercentProcessorTime"]["Comparison"]["operator"]
         comparison_value = self.conf["notifications"]["PercentProcessorTime"]["Comparison"]["value"]
-        if should_trigger(operator, total_perc_proc_time, comparison_value):
-            notif = generate_notif(reading, "PercentProcessorTime")
+        if self.__should_trigger(operator, total_perc_proc_time, comparison_value):
+            notif = self.__generate_notif(reading, "PercentProcessorTime")
             notifs.append(notif)
         return notifs
 
@@ -61,8 +61,8 @@ class Notification(object):
             free_space = disk["PercentFreeSpace"]
             operator = self.conf["notifications"]["LogicalDisk"]["Comparison"]["operator"]
             comparison_value = self.conf["notifications"]["LogicalDisk"]["Comparison"]["value"]
-            if should_trigger(operator, free_space, comparison_value):
-                notif = generate_notif(reading, "LogicalDisk")
+            if self.__should_trigger(operator, free_space, comparison_value):
+                notif = self.__generate_notif(reading, "LogicalDisk")
                 notifs.append(notif)
         return notifs
 
@@ -71,12 +71,12 @@ class Notification(object):
         free_mem = reading["data"][0]["AvailableMBytes"]
         operator = self.conf["notifications"]["Memory"]["Comparison"]["operator"]
         comparison_value = self.conf["notifications"]["Memory"]["Comparison"]["value"]
-        if should_trigger(operator, free_mem, comparison_value):
-            notif = generate_notif(reading, "Memory")
+        if self.__should_trigger(operator, free_mem, comparison_value):
+            notif = self.__generate_notif(reading, "Memory")
             notifs.append(notif)
         return notifs
 
-    def should_trigger(self, operator, current_value, comparison_value):
+    def __should_trigger(self, operator, current_value, comparison_value):
         if operator == "<":
             return current_value < comparison_value
         elif operator == ">":
@@ -92,7 +92,7 @@ class Notification(object):
         else:
             return False
 
-    def generate_notif(self, reading, notif_type):
+    def __generate_notif(self, reading, notif_type):
         notif = {}
         notif["TimeStamp"] = int(time())
         notif["Title"] = self.conf["notifications"][notif_type]["Title"]
