@@ -1,5 +1,6 @@
 
 import json
+import time
 
 if __name__.startswith("scripts"):
     import sys
@@ -19,9 +20,8 @@ def get_video_controller_reading(app: MIApp) -> dict:
 
     videoController = app.executeQuery(u"Win32_VideoController", [u"Name"])
 
-    return { 
-        "videoController": {
-            "compressed": False,
-            "data": json.dumps(videoController)
-        }
+    return {
+        "timestamp": time.time(),
+        "type": "video_controller",
+        "data": videoController
     }

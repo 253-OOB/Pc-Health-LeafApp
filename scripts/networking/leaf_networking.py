@@ -33,44 +33,16 @@ class LeafNetworking(object):
     :param url: The url to which data should be sent.
     :type url: str
 
-    :param refreshToken: The particular refresh token associated with this leaf.
-    :type refreshToken: str
-
-    :raises RefreshTokenException: Occurs when the token is deemed to be invalid.
-    :raises ConnectionError: Occurs when the leaf cannot connect to the server.       
+    :param leafToken: The particular refresh token associated with this leaf.
+    :type leafToken: str     
 
     """
 
-
-    def __init__( self, url: str, refreshToken: str ):
-
+    def __init__( self, url: str, leafToken: str ):
         self.__url = url
+        self.__leafToken = leafToken
 
-        self.__refreshToken = refreshToken
-
-        # res = requests.post(self.__url, {
-        #     "RefreshToken": self.__refreshToken
-        # }, verify=False)
-
-        # if res.status_code == 200:
-
-        #     # Connection was successful the accessToken was gathered.
-        #     self.__accessToken = res.json()["AccessToken"]
-        
-        # elif res.status_code == 403:
-
-        #     # In this case an email will be sent to the admin notifying him that there was configuration error with the leaf.
-        #     # TODO Log this as a critical error.
-        #     raise RefreshTokenException( "There was a problem with the refresh token." )
-
-        # else:
-
-        #     # In this case the caller should retry after a moment
-        #     # TODO Log this error as an error
-        #     raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")
-        
-
-    def send_to_root( self, data: dict ):
+    def send_to_root( self, data: dict, _ts: int ):
         """Sends data to the server
 
         :param data: Data to send to the server
@@ -79,45 +51,62 @@ class LeafNetworking(object):
         :raises ConnectionError: Occurs when the leaf cannot connect to the server. 
         """
 
-        print(data)
+        data["leaftoken"] = self.__leafToken
 
-        # payload = {
+        payload = {
+            "LeafToken": self.__leafToken,
+            "Data": data,
+            "_ts": _ts
+        }
 
-        #     "AccessToken": self.__accessToken,
-        #     "RefreshToken": self.__refreshToken,
-        #     "Timestamp": time.time(),
-        #     "Data": data
+        url = self.__url + 'fSendLeafData'
 
-        # }
+        res = requests.post( url, data=json.dumps(payload) )
 
-        # res = requests.post( self.__url, data=payload )
+        if res.status_code == 200:
+            resData = res.json()
+            return resData
+            # Handle cases where the server might want to return updates.
+            
+        elif res.status_code == 403:
 
-        # if res.status_code == 200:
+            raise RefreshTokenException("There was a problem with the refresh token.")
 
-        #     resData = res.json()
+        else:
+            log.error("The following status code was returned: {}".format(res.status_code))
+            raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
 
-        #     if "AccessToken" in resData:
-        #         self.__accessToken = resData["AccessToken"]
+    def send_notification_to_root( self, notifications: list ):
+        """Sends a notification to the server
 
-        # elif res.status_code == 403:
-
-        #     log.critical( "The refresh token token is wrong." )
-        #     raise RefreshTokenException("There was a problem with the refresh token.")
-
-        # else:
-
-        #     raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
-
-    @staticmethod
-    def openChannelNotification( ):
+        :param notifications: A list of notifications to send to the server
+        :type notifications: list
+        :raises RefreshTokenException: Occurs when the token is deemed to be invalid.
+        :raises ConnectionError: Occurs when the leaf cannot connect to the server. 
         """
-        Send an open channel notification.
 
-        Only use this method when you cannot authorize this leaf through the regular channels.
-        """
-        # TODO 
+        payload = {
+            "LeafToken": self.__leafToken,
+            "Notifications": notifications,
+        }
 
-        pass
+        url = self.__url + 'fSendLeafNotification'
+
+        res = requests.post( url, data=json.dumps(payload) )
+
+        if res.status_code == 200:
+            pass
+            # Handle cases where the server might want to return updates.
+            
+        elif res.status_code == 403:
+
+            raise RefreshTokenException("There was a problem with the refresh token.")
+
+        else:
+            log.error("The following status code was returned: {}".format(res.status_code))
+            raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
+
+        
     
     @staticmethod
     def initialiseLeaf( url, initialisationToken):
@@ -139,13 +128,12 @@ class LeafNetworking(object):
 
         log.info("Sending initialisation data.")
 
-        res = requests.post(url + "/default.json", data=json.dumps(payload), verify=False)
+        res = requests.post(url + "fInitialiseLeaf/default.json", data=json.dumps(payload), verify=False)
 
         if res.status_code == 200:
 
             log.info( "Successfully initialised the leaf on the server." )
 
-            print(res.status_code)
             data = res.json()
 
             conf = json.loads(data["Configuration"])
@@ -157,10 +145,8 @@ class LeafNetworking(object):
 
         elif res.status_code == 403:
 
-            log.critical( "The leaf cannot be intialised." )
-            log.critical( "The initialisation token is either wrong or expired" )
-
             raise InitialisationTokenException("There was a problem with the initialisation token.")
         
         else:
+            log.error("The following status code was returned: {}".format(res.status_code))
             raise ConnectionError("Connection error. Please try again.")

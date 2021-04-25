@@ -20,10 +20,31 @@
 
             ],
 
-            "notifications": [
-                "RULES SET TO HANDLE NOTFICATIONS"
-            ],
+            "notifications": {
 
+                "PercentProcessorTime": {
+                    
+                    "Title": "hfsh",
+                    "Content": "kjdhvoi",
+                    "Comparison": {
+                        "operator": ">",
+                        "value": "rkhf"
+                    }
+                },
+
+                "Memory": {
+                    
+                    "Title": "hfsh",
+                    "Content": "kjdhvoi",
+                    "Comparison": {
+                        "operator": ">",
+                        "value": "rkhf"
+                    }
+                }
+
+
+            },
+            
             "sqlite": "true or false"
 
         }
