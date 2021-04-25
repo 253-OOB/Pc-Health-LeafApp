@@ -23,8 +23,8 @@ from scripts.notifications.leaf_notification import Notification
 
 if __name__ == "__main__":
 
-    # URL = "https://pchealth-leaf.azurewebsites.net/api/"
-    URL = 'http://localhost:7071/api/'
+    URL = "https://pchealth-leaf.azurewebsites.net/api/"
+    # URL = 'http://localhost:7071/api/'
     
     log = appLogger("logs/leaf")
     
