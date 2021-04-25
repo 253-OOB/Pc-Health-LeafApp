@@ -42,7 +42,7 @@ class LeafNetworking(object):
         self.__url = url
         self.__leafToken = leafToken
 
-    def send_to_root( self, data: dict ):
+    def send_to_root( self, data: dict, _ts: int ):
         """Sends data to the server
 
         :param data: Data to send to the server
@@ -55,14 +55,17 @@ class LeafNetworking(object):
 
         payload = {
             "LeafToken": self.__leafToken,
-            "Data": data
+            "Data": data,
+            "_ts": _ts
         }
 
-        res = requests.post( self.__url + 'fSendLeafData', data=json.dumps(payload) )
+        url = self.__url + 'fSendLeafData'
+
+        res = requests.post( url, data=json.dumps(payload) )
 
         if res.status_code == 200:
-            pass
-            # resData = res.json()
+            resData = res.json()
+            return resData
             # Handle cases where the server might want to return updates.
             
         elif res.status_code == 403:
@@ -70,19 +73,40 @@ class LeafNetworking(object):
             raise RefreshTokenException("There was a problem with the refresh token.")
 
         else:
-            log.error(res.status_code)
+            log.error("The following status code was returned: {}".format(res.status_code))
             raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
 
-    @staticmethod
-    def openChannelNotification( ):
-        """
-        Send an open channel notification.
+    def send_notification_to_root( self, notifications: list ):
+        """Sends a notification to the server
 
-        Only use this method when you cannot authorize this leaf through the regular channels.
+        :param notifications: A list of notifications to send to the server
+        :type notifications: list
+        :raises RefreshTokenException: Occurs when the token is deemed to be invalid.
+        :raises ConnectionError: Occurs when the leaf cannot connect to the server. 
         """
-        # TODO 
 
-        pass
+        payload = {
+            "LeafToken": self.__leafToken,
+            "Notifications": notifications,
+        }
+
+        url = self.__url + 'fSendLeafNotification'
+
+        res = requests.post( url, data=json.dumps(payload) )
+
+        if res.status_code == 200:
+            pass
+            # Handle cases where the server might want to return updates.
+            
+        elif res.status_code == 403:
+
+            raise RefreshTokenException("There was a problem with the refresh token.")
+
+        else:
+            log.error("The following status code was returned: {}".format(res.status_code))
+            raise ConnectionError("There was a problem accessing the server. Please retry after a moment.")            
+
+        
     
     @staticmethod
     def initialiseLeaf( url, initialisationToken):
@@ -110,7 +134,6 @@ class LeafNetworking(object):
 
             log.info( "Successfully initialised the leaf on the server." )
 
-            print(res.status_code)
             data = res.json()
 
             conf = json.loads(data["Configuration"])
@@ -125,5 +148,5 @@ class LeafNetworking(object):
             raise InitialisationTokenException("There was a problem with the initialisation token.")
         
         else:
-            log.error(res.status_code)
+            log.error("The following status code was returned: {}".format(res.status_code))
             raise ConnectionError("Connection error. Please try again.")

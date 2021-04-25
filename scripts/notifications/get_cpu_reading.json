@@ -1,6 +1,0 @@
-{
-  "processors": {
-    "compressed": false,
-    "data": "[{\"Name\": \"Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz\", \"NumberOfCores\": 8, \"NumberOfLogicalProcessors\": 16, \"ThreadCount\": 16, \"VirtualizationFirmwareEnabled\": false, \"Cores\": [{\"Name\": \"0\", \"PercentProcessorTime\": 0}, {\"Name\": \"1\", \"PercentProcessorTime\": 0}, {\"Name\": \"10\", \"PercentProcessorTime\": 0}, {\"Name\": \"11\", \"PercentProcessorTime\": 0}, {\"Name\": \"12\", \"PercentProcessorTime\": 0}, {\"Name\": \"13\", \"PercentProcessorTime\": 0}, {\"Name\": \"14\", \"PercentProcessorTime\": 5}, {\"Name\": \"15\", \"PercentProcessorTime\": 0}, {\"Name\": \"2\", \"PercentProcessorTime\": 0}, {\"Name\": \"3\", \"PercentProcessorTime\": 0}, {\"Name\": \"4\", \"PercentProcessorTime\": 11}, {\"Name\": \"5\", \"PercentProcessorTime\": 0}, {\"Name\": \"6\", \"PercentProcessorTime\": 0}, {\"Name\": \"7\", \"PercentProcessorTime\": 0}, {\"Name\": \"8\", \"PercentProcessorTime\": 5}, {\"Name\": \"9\", \"PercentProcessorTime\": 0}, {\"Name\": \"_Total\", \"PercentProcessorTime\": 0}]}]"
-  }
-}

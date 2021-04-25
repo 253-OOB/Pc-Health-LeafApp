@@ -22,8 +22,6 @@ def get_video_controller_reading(app: MIApp) -> dict:
 
     return {
         "timestamp": time.time(),
-        "videoController": {
-            "compressed": False,
-            "data": videoController
-        }
+        "type": "video_controller",
+        "data": videoController
     }

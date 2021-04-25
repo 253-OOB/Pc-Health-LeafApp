@@ -29,9 +29,7 @@ def get_logical_disk_reading(app: MIApp) -> dict:
                 logical_disks.append( disk | perf )
     
     return {
-        "timestamp": time.time(), 
-        "logical_disks": {
-            "compressed": False,
-            "data": logical_disks
-        }
+        "timestamp": time.time(),
+        "type": "logical_disks",
+        "data": logical_disks
     }

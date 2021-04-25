@@ -1,6 +1,0 @@
-{
-    "logical_disks": {
-      "compressed": false,
-      "data": "[{\"Name\": \"C:\", \"FreeSpace\": 696.9262847900391, \"Size\": 930.8828086853027, \"FileSystem\": \"NTFS\", \"DiskBytesPersec\": 15506, \"DiskReadBytesPersec\": 0, \"DiskWriteBytesPersec\": 15506, \"PercentFreeSpace\": 74}]"
-    }
-  }

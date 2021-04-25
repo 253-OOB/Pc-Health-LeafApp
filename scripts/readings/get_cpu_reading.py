@@ -22,9 +22,7 @@ def get_cpu_reading( app: MIApp ) -> dict:
     processors[0]["Cores"] = app.executeQuery(u"Win32_PerfFormattedData_PerfOS_Processor", [u"Name", u"PercentProcessorTime"])
 
     return {
-        "timestamp": time.time(), 
-        "processors": {
-            "compressed": False,
-            "data": processors
-        }
+        "timestamp": time.time(),
+        "type": "processors", 
+        "data": processors
     }

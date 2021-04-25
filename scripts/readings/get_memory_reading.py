@@ -30,8 +30,6 @@ def get_memory_reading(app: MIApp) -> dict:
 
     return { 
         "timestamp": time.time(),
-        "memory": {
-            "compressed": False,
-            "data": memory
-        }
+        "type": "memory",
+        "data": memory
     }
