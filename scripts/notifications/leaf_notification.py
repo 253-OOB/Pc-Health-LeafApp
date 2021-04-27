@@ -84,7 +84,7 @@ class Notification(object):
                 notif = self.__generate_notif(reading, "AvailableMBytes", free_mem)
                 notifs.append(notif)
         
-            return notifs
+        return notifs
 
     def __should_trigger(self, operator, current_value, comparison_value):
         if operator == "<":
