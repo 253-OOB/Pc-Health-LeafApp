@@ -72,10 +72,10 @@ class Notification(object):
 
         data = reading["data"]
 
+        notifs = []
+
         if "AvailableMBytes" in self.conf:
             
-            notifs = []
-
             free_mem = data[0]["AvailableMBytes"]
             operator = self.conf["AvailableMBytes"]["Comparison"]["operator"]
             comparison_value = self.conf["AvailableMBytes"]["Comparison"]["value"]
@@ -84,7 +84,7 @@ class Notification(object):
                 notif = self.__generate_notif(reading, "AvailableMBytes", free_mem)
                 notifs.append(notif)
         
-            return notifs
+        return notifs
 
     def __should_trigger(self, operator, current_value, comparison_value):
         if operator == "<":
